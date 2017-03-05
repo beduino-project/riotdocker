@@ -95,11 +95,12 @@ RUN mkdir -p /opt && \
         wget -q http://codescape-mips-sdk.imgtec.com/components/toolchain/2016.05-03/Codescape.GNU.Tools.Package.2016.05-03.for.MIPS.MTI.Bare.Metal.CentOS-5.x86_64.tar.gz -O- \
         | tar -C /opt -xz
 
-RUN curl -s https://static.rust-lang.org/rustup.sh | sh -s -- --channel=nightly && \
-    cargo install bindgen
+RUN curl -s https://static.rust-lang.org/rustup.sh | sh -s -- --channel=nightly --disable-sudo && \
+    cargo install bindgen && \
+    chmod a+r /root && chmod -R a+rX /root/.cargo
 
 
-ENV PATH $PATH:/opt/mips-mti-elf/2016.05-03/bin
+ENV PATH $PATH:/opt/mips-mti-elf/2016.05-03/bin:/root/.cargo/bin
 ENV MIPS_ELF_ROOT /opt/mips-mti-elf/2016.05-03
 
 # compile suid create_user binary
