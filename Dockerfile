@@ -36,6 +36,8 @@ RUN \
     echo 'Adding gcc-arm-embedded PPA' >&2 && \
     echo "deb http://ppa.launchpad.net/team-gcc-arm-embedded/ppa/ubuntu xenial main" \
      > /etc/apt/sources.list.d/gcc-arm-embedded.list && \
+    echo "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-3.9 main" \
+     > /etc/apt/sources.list.d/llvm-toolchain.list && \
     apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
     --recv-keys B4D03348F75E3362B1E1C2A1D1FAA6ECF64D33B0 && \
     echo 'Upgrading all system packages to the latest available versions' >&2 && \
@@ -78,7 +80,8 @@ RUN \
     && echo 'Installing LLVM/Clang toolchain' >&2 && \
     apt-get -y install \
         llvm \
-        clang \
+        clang-3.9 \
+        libclang-3.9-dev \
     && echo 'Installing x86 bare metal emulation' >&2 && \
     apt-get -y install \
         qemu-system-x86 \
