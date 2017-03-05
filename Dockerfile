@@ -36,10 +36,13 @@ RUN \
     echo 'Adding gcc-arm-embedded PPA' >&2 && \
     echo "deb http://ppa.launchpad.net/team-gcc-arm-embedded/ppa/ubuntu xenial main" \
      > /etc/apt/sources.list.d/gcc-arm-embedded.list && \
-    echo "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-3.9 main" \
-     > /etc/apt/sources.list.d/llvm-toolchain.list && \
     apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
     --recv-keys B4D03348F75E3362B1E1C2A1D1FAA6ECF64D33B0 && \
+    apt-get update && \
+    apt-get -y install wget && \
+    echo "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-3.9 main" \
+     > /etc/apt/sources.list.d/llvm-toolchain.list && \
+    wget -O - http://apt.llvm.org/llvm-snapshot.gpg.key|apt-key add - && \
     echo 'Upgrading all system packages to the latest available versions' >&2 && \
     apt-get update && apt-get -y dist-upgrade \
     && echo 'Installing native toolchain and build system functionality' >&2 && \
@@ -65,7 +68,6 @@ RUN \
         p7zip \
         subversion \
         unzip \
-        wget \
     && echo 'Installing Cortex-M toolchain' >&2 && \
     apt-get -y install \
         gcc-arm-embedded \
@@ -92,6 +94,10 @@ RUN \
 RUN mkdir -p /opt && \
         wget -q http://codescape-mips-sdk.imgtec.com/components/toolchain/2016.05-03/Codescape.GNU.Tools.Package.2016.05-03.for.MIPS.MTI.Bare.Metal.CentOS-5.x86_64.tar.gz -O- \
         | tar -C /opt -xz
+
+RUN curl -s https://static.rust-lang.org/rustup.sh | sh -s -- --channel=nightly && \
+    cargo install bindgen
+
 
 ENV PATH $PATH:/opt/mips-mti-elf/2016.05-03/bin
 ENV MIPS_ELF_ROOT /opt/mips-mti-elf/2016.05-03
