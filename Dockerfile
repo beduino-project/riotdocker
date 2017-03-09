@@ -19,6 +19,8 @@ MAINTAINER Joakim Nohlgård <joakim.nohlgard@eistec.se>
 
 ENV DEBIAN_FRONTEND noninteractive
 
+ENV CARGO_HOME /opt/cargo
+
 # The following package groups will be installed:
 # - upgrade all system packages to latest available version
 # - native platform development and build system functionality (about 400 MB installed)
@@ -96,11 +98,10 @@ RUN mkdir -p /opt && \
         | tar -C /opt -xz
 
 RUN curl -s https://static.rust-lang.org/rustup.sh | sh -s -- --channel=nightly --disable-sudo && \
-    cargo install bindgen && \
-    chmod a+r /root && chmod -R a+rX /root/.cargo
+    cargo install bindgen
 
 
-ENV PATH $PATH:/opt/mips-mti-elf/2016.05-03/bin:/root/.cargo/bin
+ENV PATH $PATH:/opt/mips-mti-elf/2016.05-03/bin:/opt/cargo/bin
 ENV MIPS_ELF_ROOT /opt/mips-mti-elf/2016.05-03
 
 # compile suid create_user binary
